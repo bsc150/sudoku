@@ -77,6 +77,30 @@ class Board(object):
         if not self.squares[self.square_selected[0]][self.square_selected[1]].value == "_":
             self.squares[self.square_selected[0]][self.square_selected[1]].grey = 0
 
+    def select_square(self, row, col):
+        self.square_selected = (row, col)
+
+    def update_board(self):
+        self.board = [[self.squares[i][j].value for j in range(self.cols)] for i in range(self.rows)]
+
+    def write_square(self, value):
+        i, j = self.square_selected
+        if self.squares[i][j].value != "_":
+            return
+        self.squares[i][j].value = value
+        self.update_board()
+
+        # check if board is solvable (if so, then the move is ok)
+        if check_board(self.board) and solve_board(self.board):
+            return
+        self.board[i][j].value = "_"
+        self.board[i][j].grey = 0
+        self.update_board()
+        return
+
+    def mark_square(self, grey_value):
+        self.squares[self.square_selected[0]][self.square_selected[1]].grey = grey_value
+
 
 def redraw_window(win, board):
     win.fill(white)
