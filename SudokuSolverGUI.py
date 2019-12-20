@@ -3,9 +3,11 @@ from SudokuSolver import *
 import SudokuSquare
 from tkinter import *
 from tkinter import messagebox
+
 # colors and consts
 grey = (128, 128, 128)
 white = (255, 255, 255)
+light_green = (0, 200, 0)
 black = (0, 0, 0)  # 1
 yellow = (255, 255, 0)  # 2
 green = (0, 128, 0)  # 3
@@ -111,8 +113,26 @@ def redraw_window(win, board):
     win.fill(white)
     # Draw time
     fnt = pygame.font.SysFont("Arial", 40)
+    # solve button
+    pygame.draw.rect(window, green, (430, 550, 100, 40))
+    fnt = pygame.font.SysFont("timesnewroman", 25)
+    text = fnt.render("solve", 1, white)
+    win.blit(text, (455, 555))
     # Draw grid and board
     board.draw()
+
+
+def check_solve_button(mouse, win):
+    if 530 > mouse[0] > 430 and 590 > mouse[1] > 550:
+        pygame.draw.rect(window, light_green, (430, 550, 100, 40))
+        fnt = pygame.font.SysFont("timesnewroman", 25)
+        text = fnt.render("solve", 1, white)
+        win.blit(text, (455, 555))
+    else:
+        pygame.draw.rect(window, green, (430, 550, 100, 40))
+        fnt = pygame.font.SysFont("timesnewroman", 25)
+        text = fnt.render("solve", 1, white)
+        win.blit(text, (455, 555))
 
 
 if __name__ == "__main__":
@@ -120,6 +140,7 @@ if __name__ == "__main__":
     window = pygame.display.set_mode((540, 600))
     pygame.display.set_caption("Sudoku")
     board = Board(540, 540, window, sudoku_board)
+    pygame.draw.rect(window, green, (0, 540, 60, 60))
     board.draw()
     key = None
     playing = True
@@ -168,6 +189,7 @@ if __name__ == "__main__":
         if key is not None and board.square_selected:
             board.mark_square(key)
         redraw_window(window, board)
+        check_solve_button(pygame.mouse.get_pos(),window)
         pygame.display.update()
         if board.is_win():
             print("winner!!!")
