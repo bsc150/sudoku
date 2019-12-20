@@ -97,9 +97,7 @@ def solve_board(board, tries=None):
 board_num = random.randint(0, 32)
 sudoku_board = boards.boards[board_num]
 ran = random.randint(0, 2)
-print(sudoku_board)
 if ran == 2:
     list(map(list, zip(*sudoku_board)))
 elif ran == 1:
     sudoku_board = sudoku_board[::-1]
-print(ran)
