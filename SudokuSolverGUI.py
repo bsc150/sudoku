@@ -78,7 +78,10 @@ class Board(object):
             self.squares[self.square_selected[0]][self.square_selected[1]].grey = 0
 
     def select_square(self, row, col):
+        if self.square_selected is not None:
+            self.squares[self.square_selected[0]][self.square_selected[1]].selected = False
         self.square_selected = (row, col)
+        self.squares[row][col].selected = True
 
     def update_board(self):
         self.board = [[self.squares[i][j].value for j in range(self.cols)] for i in range(self.rows)]
@@ -102,6 +105,7 @@ class Board(object):
         self.squares[self.square_selected[0]][self.square_selected[1]].grey = grey_value
 
 
+
 def redraw_window(win, board):
     win.fill(white)
     # Draw time
@@ -116,6 +120,7 @@ if __name__ == "__main__":
     pygame.display.set_caption("Sudoku")
     board = Board(540, 540, window, sudoku_board)
     board.draw()
+    key = None
     playing = True
 
     while playing:
@@ -126,22 +131,33 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     key = 1
-                if event.key == pygame.K_2:
+                elif event.key == pygame.K_2:
                     key = 2
-                if event.key == pygame.K_3:
+                elif event.key == pygame.K_3:
                     key = 3
-                if event.key == pygame.K_4:
+                elif event.key == pygame.K_4:
                     key = 4
-                if event.key == pygame.K_5:
+                elif event.key == pygame.K_5:
                     key = 5
-                if event.key == pygame.K_6:
+                elif event.key == pygame.K_6:
                     key = 6
-                if event.key == pygame.K_7:
+                elif event.key == pygame.K_7:
                     key = 7
-                if event.key == pygame.K_8:
+                elif event.key == pygame.K_8:
                     key = 8
-                if event.key == pygame.K_9:
+                elif event.key == pygame.K_9:
                     key = 9
+                elif event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE:
+                    board.clear_square_selected()
+                    key = None
+            if event.type == pygame.MOUSEBUTTONUP:
+                position = pygame.mouse.get_pos()
+                clicked = board.position_click(position)
+                if clicked:
+                    board.select_square(int(clicked[1]), int(clicked[0]))
+                    key = None
+        if key is not None and board.square_selected:
+            board.mark_square(key)
         redraw_window(window, board)
         pygame.display.update()
     pygame.quit()
