@@ -1,6 +1,6 @@
 import pygame
 from SudokuSolver import *
-import time
+import SudokuSquare
 
 # colors and consts
 grey = (128, 128, 128)
@@ -26,34 +26,6 @@ num_to_col[8] = red
 num_to_col[9] = dark_brown
 
 
-class SudokuSquare(object):
-    def __init__(self, value, width, height, row, col):
-        self.value = value
-        self.grey = 0  # invalid number to grey out
-        self.row = row
-        self.col = col
-        self.width = width
-        self.height = height
-        self.selected = False
-
-    def draw(self, win):
-        fnt = pygame.font.SysFont("comicsans", 40)
-
-        gap = self.width / 9
-        x = self.col * gap
-        y = self.row * gap
-
-        if self.grey != 0 and self.value == "_":
-            text = fnt.render(str(self.grey), 1, grey)
-            win.blit(text, (x + 5, y + 5))
-        elif not (self.value == "_"):
-            text = fnt.render(str(self.value), 1, num_to_col[self.value])  # change to fit color
-            win.blit(text, (x + (gap / 2 - text.get_width() / 2), y + (gap / 2 - text.get_height() / 2)))
-
-        if self.selected:
-            pygame.draw.rect(win, red, (x, y, gap, gap), 3)
-
-
 class Board(object):
 
     def __init__(self, width, height, win, sud_board, rows=9, cols=9):
@@ -64,7 +36,8 @@ class Board(object):
         self.window = win
         self.square_selected = None
         self.board = sud_board
-        self.squares = [[SudokuSquare(self.board[i][j], width, height, i, j) for j in range(cols)] for i in range(rows)]
+        self.squares = [[SudokuSquare.SudokuSquare(self.board[i][j], width, height, i, j) for j in range(cols)] for i in
+                        range(rows)]
 
     def draw(self):
         # Draw Grid Lines
@@ -80,6 +53,29 @@ class Board(object):
         for i in range(self.rows):
             for j in range(self.cols):
                 self.squares[i][j].draw(self.window)
+
+    def is_win(self):
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if self.board[i][j] == "_":
+                    return False
+        return True
+
+    def position_click(self, position):
+        if self.width > position[0] and self.height > position[1]:
+            # in the screen
+            div_x = self.width / 9
+            div_y = self.height / 9
+            x = position[0] // div_x
+            y = position[1] // div_y
+            return x, y  # fixme was y,x in tutorial???
+        else:
+            # out of screen
+            return None
+
+    def clear_square_selected(self):
+        if not self.squares[self.square_selected[0]][self.square_selected[1]].value == "_":
+            self.squares[self.square_selected[0]][self.square_selected[1]].grey = 0
 
 
 def redraw_window(win, board):
