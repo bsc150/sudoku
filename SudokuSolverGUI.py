@@ -31,7 +31,7 @@ num_to_col[9] = dark_brown
 
 class Board(object):
 
-    def __init__(self, width, height, win, sud_board, rows=9, cols=9):
+    def __init__(self, width, height, win, sud_board: list, rows=9, cols=9):
         self.rows = rows
         self.cols = cols
         self.width = width
@@ -128,11 +128,39 @@ def check_solve_button(mouse, win):
         fnt = pygame.font.SysFont("timesnewroman", 25)
         text = fnt.render("solve", 1, white)
         win.blit(text, (455, 555))
+        return True
     else:
         pygame.draw.rect(window, green, (430, 550, 100, 40))
         fnt = pygame.font.SysFont("timesnewroman", 25)
         text = fnt.render("solve", 1, white)
         win.blit(text, (455, 555))
+        return False
+
+
+def solve_board_gui(s_board: Board, win, tries=None):
+    if tries is None:
+        tries = []
+    cell = get_first_empty_cell(s_board.board)
+    if not cell:  # no empty cells -> finished
+        return True
+    else:
+        for i in range(1, 10):
+            s_board.squares[cell[0]][cell[1]].value = i
+            s_board.update_board()
+            redraw_window(win, s_board)
+            pygame.display.update()
+            pygame.time.delay(20)
+            if check_board(s_board.board):
+                tries.append(i)
+                solvable = solve_board_gui(s_board, win, tries)
+                if solvable:
+                    return True
+            s_board.squares[cell[0]][cell[1]].value = "_"
+            s_board.update_board()
+            redraw_window(win, s_board)
+            pygame.display.update()
+            pygame.time.delay(20)
+        return False
 
 
 if __name__ == "__main__":
@@ -186,10 +214,13 @@ if __name__ == "__main__":
                 if clicked:
                     board.select_square(int(clicked[1]), int(clicked[0]))
                     key = None
+                if check_solve_button(position, window):
+                    print("solving")
+                    solve_board_gui(board, window)
         if key is not None and board.square_selected:
             board.mark_square(key)
         redraw_window(window, board)
-        check_solve_button(pygame.mouse.get_pos(),window)
+        check_solve_button(pygame.mouse.get_pos(), window)
         pygame.display.update()
         if board.is_win():
             print("winner!!!")
