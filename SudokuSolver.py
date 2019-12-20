@@ -48,6 +48,27 @@ def check_board(board: list) -> bool:
     return True
 
 
+def check_pos(board: list, x, y, num) -> bool:
+    # check rows
+    for j in range(9):
+        if board[x][j] == num:
+            return False
+
+    # check cols
+    for i in range(9):
+        if board[i][y] == num:
+            return False
+
+    # check squares
+    x = x // 3
+    y = y % 3
+    for i in range(x * 3, x * 3 + 3):
+        for j in range(y * 3, y * 3 + 3):
+            if board[i][j] == num:
+                return False
+    return True
+
+
 def solve_board(board, tries=None):
     if tries is None:
         tries = []
@@ -57,7 +78,7 @@ def solve_board(board, tries=None):
     else:
         for i in range(1, 10):
             board[cell[0]][cell[1]] = i
-            if check_board(board):
+            if check_pos(board, cell[0], cell[0], i):
                 tries.append(i)
                 solvable = solve_board(board, tries)
                 if solvable:

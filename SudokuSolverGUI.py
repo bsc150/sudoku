@@ -96,7 +96,7 @@ class Board(object):
         self.squares[i][j].value = value
         self.update_board()
         # check if board is solvable (if so, then the move is ok)
-        if check_board(self.board) and solve_board(self.board):
+        if check_pos(self.board, i, j, value) and solve_board(self.board):
             return
         Tk().wm_withdraw()  # to hide the main window
         messagebox.showinfo('Sudoku', 'mistakes were made')
