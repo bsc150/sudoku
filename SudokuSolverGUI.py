@@ -74,7 +74,7 @@ class Board(object):
             return None
 
     def clear_square_selected(self):
-        if not self.squares[self.square_selected[0]][self.square_selected[1]].value == "_":
+        if self.squares[self.square_selected[0]][self.square_selected[1]].value == "_":
             self.squares[self.square_selected[0]][self.square_selected[1]].grey = 0
 
     def select_square(self, row, col):
@@ -95,6 +95,7 @@ class Board(object):
 
         # check if board is solvable (if so, then the move is ok)
         if check_board(self.board) and solve_board(self.board):
+            # TODO add popup "mistakes were made"
             return
         self.board[i][j].value = "_"
         self.board[i][j].grey = 0
@@ -103,7 +104,6 @@ class Board(object):
 
     def mark_square(self, grey_value):
         self.squares[self.square_selected[0]][self.square_selected[1]].grey = grey_value
-
 
 
 def redraw_window(win, board):
@@ -129,23 +129,30 @@ if __name__ == "__main__":
                 playing = False
                 break
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_1:
+                if event.key == pygame.K_RETURN:
+                    selected = board.square_selected
+                    if selected is not None:
+                        row, col = selected
+                        if board.squares[row][col].grey != 0:
+                            # the square is marked
+                            board.write_square(board.squares[row][col].grey)
+                if event.key == pygame.K_1 or event.key == pygame.K_KP1:
                     key = 1
-                elif event.key == pygame.K_2:
+                elif event.key == pygame.K_2 or event.key == pygame.K_KP2:
                     key = 2
-                elif event.key == pygame.K_3:
+                elif event.key == pygame.K_3 or event.key == pygame.K_KP3:
                     key = 3
-                elif event.key == pygame.K_4:
+                elif event.key == pygame.K_4 or event.key == pygame.K_KP4:
                     key = 4
-                elif event.key == pygame.K_5:
+                elif event.key == pygame.K_5 or event.key == pygame.K_KP5:
                     key = 5
-                elif event.key == pygame.K_6:
+                elif event.key == pygame.K_6 or event.key == pygame.K_KP6:
                     key = 6
-                elif event.key == pygame.K_7:
+                elif event.key == pygame.K_7 or event.key == pygame.K_KP7:
                     key = 7
-                elif event.key == pygame.K_8:
+                elif event.key == pygame.K_8 or event.key == pygame.K_KP8:
                     key = 8
-                elif event.key == pygame.K_9:
+                elif event.key == pygame.K_9 or event.key == pygame.K_KP9:
                     key = 9
                 elif event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE:
                     board.clear_square_selected()
