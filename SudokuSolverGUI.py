@@ -149,7 +149,7 @@ def solve_board_gui(s_board: Board, win, tries=None):
             s_board.update_board()
             redraw_window(win, s_board)
             pygame.display.update()
-            pygame.time.delay(20)
+            # pygame.time.delay(5)
             if check_board(s_board.board):
                 tries.append(i)
                 solvable = solve_board_gui(s_board, win, tries)
@@ -159,7 +159,7 @@ def solve_board_gui(s_board: Board, win, tries=None):
             s_board.update_board()
             redraw_window(win, s_board)
             pygame.display.update()
-            pygame.time.delay(20)
+            # pygame.time.delay(5)
         return False
 
 

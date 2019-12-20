@@ -1,3 +1,10 @@
+import random
+
+import numpy
+
+import boards
+
+
 def print_sudoku_board(board: list):
     for i in range(9):
         if i % 3 == 0:
@@ -87,20 +94,12 @@ def solve_board(board, tries=None):
         return False
 
 
-sudoku_board = [
-    [7, 8, "_", 4, "_", "_", 1, 2, "_"],
-    [6, "_", "_", "_", 7, 5, "_", "_", 9],
-    ["_", "_", "_", 6, "_", 1, "_", 7, 8],
-    ["_", "_", 7, "_", 4, "_", 2, 6, "_"],
-    ["_", "_", 1, "_", 5, "_", 9, 3, "_"],
-    [9, "_", 4, "_", 6, "_", "_", "_", 5],
-    ["_", 7, "_", 3, "_", "_", "_", 1, 2],
-    [1, 2, "_", "_", "_", 7, 4, "_", "_"],
-    ["_", 4, 9, 2, "_", 6, "_", "_", 7]
-]
-
-# print_sudoku_board(sudoku_board)
-# print(get_first_empty_cell(sudoku_board))
-# print(check_board(sudoku_board))
-# solve_board(sudoku_board)
-# print_sudoku_board(sudoku_board)
+board_num = random.randint(0, 32)
+sudoku_board = boards.boards[board_num]
+ran = random.randint(0, 2)
+print(sudoku_board)
+if ran == 2:
+    list(map(list, zip(*sudoku_board)))
+elif ran == 1:
+    sudoku_board = sudoku_board[::-1]
+print(ran)
