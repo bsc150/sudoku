@@ -1,5 +1,6 @@
 import SudokuSolverGUI
 
+
 class SudokuSquare(object):
     def __init__(self, value, width, height, row, col):
         self.value = value
@@ -13,7 +14,8 @@ class SudokuSquare(object):
     def draw(self, win):
         fnt = SudokuSolverGUI.pygame.font.SysFont("david", 40)
         grey_fnt = SudokuSolverGUI.pygame.font.SysFont("david", 30)
-
+        # if self.row == 2 and self.col == 2:
+        #     print("(22).grey: " + str(self.grey))
         gap = self.width / 9
         x = self.col * gap
         y = self.row * gap
@@ -27,3 +29,6 @@ class SudokuSquare(object):
 
         if self.selected:
             SudokuSolverGUI.pygame.draw.rect(win, SudokuSolverGUI.red, (x, y, gap, gap), 3)
+
+    def set_grey_value(self, value):
+        self.grey = value

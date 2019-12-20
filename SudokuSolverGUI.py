@@ -1,7 +1,8 @@
 import pygame
 from SudokuSolver import *
 import SudokuSquare
-
+from tkinter import *
+from tkinter import messagebox
 # colors and consts
 grey = (128, 128, 128)
 white = (255, 255, 255)
@@ -95,15 +96,15 @@ class Board(object):
 
         # check if board is solvable (if so, then the move is ok)
         if check_board(self.board) and solve_board(self.board):
-            # TODO add popup "mistakes were made"
             return
-        self.board[i][j].value = "_"
-        self.board[i][j].grey = 0
+        # TODO add popup "mistakes were made"
+        self.squares[i][j].value = "_"
+        self.squares[i][j].set_grey_value(0)
         self.update_board()
         return
 
     def mark_square(self, grey_value):
-        self.squares[self.square_selected[0]][self.square_selected[1]].grey = grey_value
+        self.squares[self.square_selected[0]][self.square_selected[1]].set_grey_value(grey_value)
 
 
 def redraw_window(win, board):
@@ -125,18 +126,19 @@ if __name__ == "__main__":
 
     while playing:
         for event in pygame.event.get():
+            key = None
             if event.type == pygame.QUIT:
                 playing = False
                 break
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                     selected = board.square_selected
                     if selected is not None:
                         row, col = selected
                         if board.squares[row][col].grey != 0:
                             # the square is marked
                             board.write_square(board.squares[row][col].grey)
-                if event.key == pygame.K_1 or event.key == pygame.K_KP1:
+                elif event.key == pygame.K_1 or event.key == pygame.K_KP1:
                     key = 1
                 elif event.key == pygame.K_2 or event.key == pygame.K_KP2:
                     key = 2
@@ -157,7 +159,7 @@ if __name__ == "__main__":
                 elif event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE:
                     board.clear_square_selected()
                     key = None
-            if event.type == pygame.MOUSEBUTTONUP:
+            elif event.type == pygame.MOUSEBUTTONUP:
                 position = pygame.mouse.get_pos()
                 clicked = board.position_click(position)
                 if clicked:
@@ -167,4 +169,8 @@ if __name__ == "__main__":
             board.mark_square(key)
         redraw_window(window, board)
         pygame.display.update()
+        if board.is_win():
+            print("winner!!!")
+            Tk().wm_withdraw()  # to hide the main window
+            messagebox.showinfo('You Win!!!!', 'OK')
     pygame.quit()
