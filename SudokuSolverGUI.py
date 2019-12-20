@@ -97,7 +97,8 @@ class Board(object):
         # check if board is solvable (if so, then the move is ok)
         if check_board(self.board) and solve_board(self.board):
             return
-        # TODO add popup "mistakes were made"
+        Tk().wm_withdraw()  # to hide the main window
+        messagebox.showinfo('Sudoku', 'mistakes were made')
         self.squares[i][j].value = "_"
         self.squares[i][j].set_grey_value(0)
         self.update_board()
@@ -172,5 +173,5 @@ if __name__ == "__main__":
         if board.is_win():
             print("winner!!!")
             Tk().wm_withdraw()  # to hide the main window
-            messagebox.showinfo('You Win!!!!', 'OK')
+            messagebox.showinfo('Sudoku', 'You Win!!!!')
     pygame.quit()
