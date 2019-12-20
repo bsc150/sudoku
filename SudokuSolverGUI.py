@@ -58,7 +58,7 @@ class Board(object):
     def is_win(self):
         for i in range(self.rows):
             for j in range(self.cols):
-                if self.board[i][j] == "_":
+                if self.squares[i][j].value == "_":
                     return False
         return True
 
@@ -93,7 +93,6 @@ class Board(object):
             return
         self.squares[i][j].value = value
         self.update_board()
-
         # check if board is solvable (if so, then the move is ok)
         if check_board(self.board) and solve_board(self.board):
             return
@@ -174,4 +173,5 @@ if __name__ == "__main__":
             print("winner!!!")
             Tk().wm_withdraw()  # to hide the main window
             messagebox.showinfo('Sudoku', 'You Win!!!!')
+            break
     pygame.quit()
