@@ -55,7 +55,7 @@ def check_board(board: list) -> bool:
     return True
 
 
-def check_pos(board: list, x, y, num) -> bool:
+def check_pos(board: list, y, x, num) -> bool:
     # check rows
     for j in range(9):
         if board[x][j] == num:
@@ -85,7 +85,7 @@ def solve_board(board, tries=None):
     else:
         for i in range(1, 10):
             board[cell[0]][cell[1]] = i
-            if check_pos(board, cell[0], cell[0], i):
+            if check_board(board): # check_pos cell[0], cell[1], i
                 tries.append(i)
                 solvable = solve_board(board, tries)
                 if solvable:
@@ -94,7 +94,7 @@ def solve_board(board, tries=None):
         return False
 
 
-board_num = random.randint(0, 32)
+board_num = random.randint(0, 31)
 sudoku_board = boards.boards[board_num]
 ran = random.randint(0, 2)
 if ran == 2:

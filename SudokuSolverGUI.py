@@ -10,9 +10,9 @@ white = (255, 255, 255)
 light_green = (0, 200, 0)
 black = (0, 0, 0)  # 1
 yellow = (255, 255, 0)  # 2
-green = (0, 128, 0)  # 3
+green = (127, 255, 0)  # 3
 blue = (0, 0, 255)  # 4
-pink = (255, 105, 180)  # 5
+pink = (233, 0, 200)  # 5
 brown = (102, 51, 0)  # 6
 orange = (255, 140, 0)  # 7
 red = (255, 0, 0)  # 8
@@ -96,7 +96,7 @@ class Board(object):
         self.squares[i][j].value = value
         self.update_board()
         # check if board is solvable (if so, then the move is ok)
-        if check_pos(self.board, i, j, value) and solve_board(self.board):
+        if check_board(self.board) and solve_board(self.board):
             return
         Tk().wm_withdraw()  # to hide the main window
         messagebox.showinfo('Sudoku', 'mistakes were made')
@@ -111,8 +111,6 @@ class Board(object):
 
 def redraw_window(win, board):
     win.fill(white)
-    # Draw time
-    fnt = pygame.font.SysFont("Arial", 40)
     # solve button
     pygame.draw.rect(window, green, (430, 550, 100, 40))
     fnt = pygame.font.SysFont("timesnewroman", 25)
@@ -145,6 +143,9 @@ def solve_board_gui(s_board: Board, win, tries=None):
         return True
     else:
         for i in range(1, 10):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit(0)
             s_board.squares[cell[0]][cell[1]].value = i
             s_board.update_board()
             redraw_window(win, s_board)
