@@ -109,13 +109,20 @@ class Board(object):
         self.squares[self.square_selected[0]][self.square_selected[1]].set_grey_value(grey_value)
 
 
-def redraw_window(win, board):
+def redraw_window(win, board, solving=False):
     win.fill(white)
     # solve button
-    pygame.draw.rect(window, green, (430, 550, 100, 40))
-    fnt = pygame.font.SysFont("timesnewroman", 25)
-    text = fnt.render("solve", 1, white)
-    win.blit(text, (455, 555))
+    if not solving:
+        pygame.draw.rect(window, green, (430, 550, 100, 40))
+        fnt = pygame.font.SysFont("timesnewroman", 25)
+        text = fnt.render("solve", 1, white)
+        win.blit(text, (455, 555))
+    else:
+        pygame.draw.rect(window, red, (430, 550, 100, 40))
+        fnt = pygame.font.SysFont("timesnewroman", 25)
+        text = fnt.render("Stop", 1, white)
+        win.blit(text, (455, 555))
+
     # Draw grid and board
     board.draw()
 
@@ -135,9 +142,11 @@ def check_solve_button(mouse, win):
         return False
 
 
-def solve_board_gui(s_board: Board, win, tries=None):
+def solve_board_gui2(s_board: Board, win, tries=None):
+    print_sudoku_board(s_board.board)
     if tries is None:
         tries = []
+    print(tries)
     cell = get_first_empty_cell(s_board.board)
     if not cell:  # no empty cells -> finished
         return True
@@ -148,20 +157,45 @@ def solve_board_gui(s_board: Board, win, tries=None):
                     exit(0)
             s_board.squares[cell[0]][cell[1]].value = i
             s_board.update_board()
-            redraw_window(win, s_board)
+            redraw_window(win, s_board, solving=True)
             pygame.display.update()
             # pygame.time.delay(5)
-            if check_board(s_board.board):
+            if check_board(s_board.board):  # was check board
                 tries.append(i)
-                solvable = solve_board_gui(s_board, win, tries)
+                solvable = solve_board_gui2(s_board, win, tries)
                 if solvable:
                     return True
             s_board.squares[cell[0]][cell[1]].value = "_"
             s_board.update_board()
-            redraw_window(win, s_board)
+            redraw_window(win, s_board, solving=True)
             pygame.display.update()
             # pygame.time.delay(5)
         return False
+
+
+def solve_board_gui(s_board: Board, win):
+    print_sudoku_board(s_board.board)
+    solve_board(s_board.board)
+    print_sudoku_board(s_board.board)
+    for i in range(9):
+        for j in range(9):
+            s_board.squares[i][j].value = s_board.board[i][j]
+            redraw_window(win, s_board, solving=True)
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit(0)
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    position = pygame.mouse.get_pos()
+                    clicked = board.position_click(position)
+                    if clicked:
+                        board.select_square(int(clicked[1]), int(clicked[0]))
+                    if check_solve_button(position, window):
+                        print("stopped solving")
+                        s_board.update_board()
+                        redraw_window(win, s_board, solving=False)
+                        pygame.display.update()
+    return True
 
 
 if __name__ == "__main__":
