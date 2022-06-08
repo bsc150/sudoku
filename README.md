@@ -1,4 +1,4 @@
-# sudoku
+# Sudoku
 
 Generates a random sudoko game, with the option to solve it yourself or solve it automatically using backtracking :)
 
